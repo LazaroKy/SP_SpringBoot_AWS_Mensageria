@@ -15,22 +15,20 @@ O microserviço msextratobancario consome a mensagem enviada para queue transaca
 Docker e Docker Compose instalados (para subir o RabbitMQ facilmente) \
 RabbitMQ configurado e em execução. 
 
+### Para Execução
+1. Antes de realizar qualquer depósito, é necessário criar o extrato bancário de uma conta cliente no microserviço msextratobancario. Utilize o seguinte endpoint: 
 
-1 Inicializar o Extrato Bancário \
-Antes de realizar qualquer depósito, é necessário criar o extrato bancário de uma conta cliente no microserviço msextratobancario. Utilize o seguinte endpoint: 
+> Endpoint: \
+> POST http://localhost:8081/extrato-bancario 
 
-Endpoint: \
-POST http://localhost:8081/extrato-bancario \
-Exemplo de Body (JSON): 
+> Exemplo de Body (JSON): \
+> Copiar código \
+> { \
+ > "idContaCliente": "1" \
+> } \
+> Esse endpoint inicializa o extrato bancário para a conta do cliente com idContaCliente = 1.
 
-json \
-Copiar código \
-{ \
-  "idContaCliente": "1" \
-} \
-Esse endpoint inicializa o extrato bancário para a conta do cliente com idContaCliente = 1.
-
-2 Realizar um Depósito \
+2. Realizar um Depósito \
 Com o extrato bancário criado, você pode realizar um depósito no microserviço msdeposito.
 
 Endpoint: \
@@ -56,16 +54,9 @@ Copiar código \
   "idContaCliente": "1" \
 } \
 Microserviço msextratobancario \
-Criar Extrato Bancário: \
-POST http://localhost:8081/extrato-bancario \
-Body: \
-{ \
-  "idExtrato": 1, \
-  "idContaCliente": 3, \
-  "dataExpedicao": "2024-11-25T15:19:31.979257", \
-  "saldo": null, \ 
-  "movimentacoes": [] \
-} \
+Buscar Extratos Bancário: \
+GET http://localhost:8081/extrato-bancario \
+\
 Microserviço msdeposito \
 Realizar Depósito: \
 POST http://localhost:8080/deposito \
@@ -75,18 +66,22 @@ Copiar código \
 { \
   "idContaCliente": "1", \
   "valorDeposito": 100.00 \
-} \
+}
 
 
 ### Execute a aplicação na sua máquina
 Clone o repositório
 > git clone https://github.com/LazaroKy/SP_SpringBoot_AWS_Mensageria/
+Rode o serviço do RabbitMQ
+> docker run -it --rm --name  rabbitmqms -p 5672:5672 -p 15672:15672 rabbitmq:4.0-management
+Quando parar o container ele irá se destroir, caso desejar manter o container execute o comando sem "--rm"
 
-Abra com sua IDE e execute o programa localmente, ou se preferir também pode rodar com docker compose \
-abra o bash no repositório clonado e rode o comando: \
+Abra com sua IDE os diretório msextratobancario e msdeposito e execute o programa localmente, ou se preferir também pode rodar com docker compose \
+\
+abra o bash na pasta Mensageria_RabbitMQ do repositório clonado e rode o comando:
 >  docker-compose -p desafio-mensageria up -d
 
-### Siga os passos descritos na Configuração Inicial:
+### Siga os passos descritos para execução da aplicação:
 Crie o extrato bancário da conta do cliente. \
 Realize depósitos e acompanhe as movimentações no msextratobancario 
 
