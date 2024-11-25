@@ -1,0 +1,28 @@
+spring:
+  application:
+    name: msextratobancario
+
+  #RabbitMQ
+  rabbitmq:
+    host: localhost
+    port: 5672
+    username: guest
+    password: guest
+  datasource:
+    url: jdbc:mysql://localhost:3306/dbbanco?useSSL=false&serverTimezone=UTC
+    username: root
+    password: 1234
+    driverClassName: com.mysql.cj.jdbc.Driver
+  jpa:
+    hibernate:
+      ddl-auto: update
+    show-sql: true
+
+server:
+  port: 8081
+
+#Queue
+mq:
+  queues:
+    transacao-banco: transacao-banco
+
