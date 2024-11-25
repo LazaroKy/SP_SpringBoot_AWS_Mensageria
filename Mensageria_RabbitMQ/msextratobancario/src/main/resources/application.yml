@@ -4,14 +4,14 @@ spring:
 
   #RabbitMQ
   rabbitmq:
-    host: localhost
+    host: ${RABBITMQ_SERVER:localhost}
     port: 5672
-    username: guest
-    password: guest
+    username: ${RABBIT_USERNAME:guest}
+    password: ${RABBIT_PASSWORD:guest}
   datasource:
-    url: jdbc:mysql://localhost:3306/dbbanco?useSSL=false&serverTimezone=UTC
-    username: root
-    password: 1234
+    url: ${DATASOURCE_URL:jdbc:mysql://localhost:3306/dbbanco?useSSL=false&serverTimezone=UTC}
+    username: ${DATASOURCE_USERNAME:root}
+    password: ${DATASOURCE_PASSWORD:1234}
     driverClassName: com.mysql.cj.jdbc.Driver
   jpa:
     hibernate:
