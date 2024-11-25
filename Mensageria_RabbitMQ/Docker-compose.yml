@@ -1,0 +1,72 @@
+services:
+  rabbitmqms:
+    image: rabbitmq:4.0-management
+    container_name: rabbitmqms
+    ports:
+      - "15672:15672"
+      - "5672:5672"
+    environment:
+      RABBITMQ_SERVER: rabbitmqms  #nome do container
+      RABBIT_USERNAME: guest
+      RABBIT_PASSWORD: guest
+    networks:
+      - network-desafio
+
+  msextrato-bancario:
+    build:
+      context: ./msextratobancario
+    ports:
+      - "8081:8081"
+    environment:
+      RABBITMQ_SERVER: rabbitmqms  #nome do container
+      RABBIT_USERNAME: guest
+      RABBIT_PASSWORD: guest
+      DATASOURCE_URL: jdbc:mysql-db://localhost:3306/dbbanco
+      DATASOURCE_USERNAME: user
+      DATASOURCE_PASSWORD: 1234
+    depends_on:
+      - rabbitmqms
+      - mysql
+    networks:
+      - network-desafio
+
+  msdeposito:
+    build:
+      context: ./msdeposito
+    ports:
+      - "8080:8080"
+    environment:
+      RABBITMQ_SERVER: rabbitmqms
+      RABBIT_USERNAME: guest
+      RABBIT_PASSWORD: guest
+      DATASOURCE_URL: jdbc:mysql-db://localhost:3306/dbbanco
+      DATASOURCE_USERNAME: user
+      DATASOURCE_PASSWORD: 1234
+    depends_on:
+      - rabbitmqms
+      - mysql
+    networks:
+      - network-desafio
+
+  mysql:
+    image: mysql:8.0
+    container_name: mysql-db
+    environment:
+      MYSQL_ROOT_PASSWORD: 1234
+      MYSQL_DATABASE: dbbanco
+      MYSQL_USER: user
+      MYSQL_PASSWORD: 1234
+    ports:
+      - "3306:3306"
+    volumes:
+      - mysql-data:/var/lib/mysql
+    networks:
+      - network-desafio
+
+networks:
+  network-desafio:
+    driver: bridge
+
+volumes:
+  mysql-data:
+    driver: local
